@@ -24,60 +24,92 @@
     <div class="container-fluid">
         <div class="row">
 
-            <div class="col-md-3  bg-light text-left search-container">
+            <div class="col-md-3 bg-light text-left search-container">
                 
                     <h4>Search for a City:</h4>
-                    <div class="input-group">
-                        <form id="city-search">
+                    <div class="form-group form-inline">
+                        
                             <input type="text" name="cityName" id="cityName" class="form-control" autofocus="true" placeholder="Search city">
                             <span class="input-group-btn">
                                 <button class="btn btn-primary" id="search-button" type="submit"><i class="fas fa-search"></i></button>
                             </span>
-                        </form>
+                        
                     </div>
                                
             </div>
-
+            <!-- column for current weather -->
             <div class="col-md-9 px-md-5">
-                <div class="row border">
-                    <div class="col-md-12" id="dailyWeather">
-                        <h2 class="text-left" id="city-date-icon"><span id="now-icon"></span></h2>
-                        <ul id="daily-conditions">
+                <div class="row border">                    
+                    <div class="col-md-8">
+                        
+                        <div  id="dailyWeather">
+
+                        </div>
+                        <div id="daily-conditions">
                             
-                        </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4 d-flex justify-content-center" id="dailyIcon">
+
                     </div>
                 </div>
+                <!-- Cards for 5 day forecast -->
                 <div class="row">
                     <div class="col-md-12">
-                        <h2 class="text-left">5 day forecast:</h2>
+                        <h2 class="text-left">5-Day Forecast:</h2>
                         <div class="card-deck" id="five-day">
 
-                            <div class="card">
-                                <div class="card-body" id="day-1">
-                    
+                            <div class="card" style="width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center" id="forecastDate0"></h5>
+                                    
+                                    <img class="mx-auto d-block" id="forecastImg0" src="">
+                                    <p id="forecastTemp0"></p>
+                                    <p id="forecastHum0"></p>
+                                
                                 </div>
                             </div>
 
-                            <div class="card">
-                                <div class="card-body"id="day-2">
+                            <div class="card" style="width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center" id="forecastDate1"></h5>
+                                    
+                                    <img class="mx-auto d-block" id="forecastImg1" src="">
+                                    <p id="forecastTemp1"></p>
+                                    <p id="forecastHum1"></p>
                                     
                                 </div>
                             </div>
 
-                            <div class="card">
-                                <div class="card-body" id="day-3">
+                            <div class="card" style="width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center" id="forecastDate2"></h5>
+                                    
+                                    <img  class="mx-auto d-block" id="forecastImg2" src="">
+                                    <p id="forecastTemp2"></p>
+                                    <p id="forecastHum2"></p>
                                     
                                 </div>
                             </div>
 
-                            <div class="card">
+                            <div class="card" style="width: 18rem;">
                                 <div class="card-body"id="day-4">
+                                    <h5 class="card-title text-center" id="forecastDate3"></h5>
+                                    
+                                        <img class="mx-auto d-block" id="forecastImg3" src="">
+                                        <p id="forecastTemp3"></p>
+                                        <p id="forecastHum3"></p>
                                     
                                 </div>
                             </div>
 
-                            <div class="card">
+                            <div class="card" style="width: 18rem;">
                                 <div class="card-body"id="day-5">
+                                    <h5 class="card-title text-center" id="forecastDate4"></h5>
+                                    
+                                        <img class="mx-auto d-block" id="forecastImg4" src="">
+                                        <p id="forecastTemp4"></p>
+                                        <p id="forecastHum4"></p>
                                     
                                 </div>
                             </div>
