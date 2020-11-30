@@ -27,7 +27,7 @@
             <div class="col-md-3 bg-light text-left search-container">
                 
                     <h4>Search for a City:</h4>
-                    <div class="form-group form-inline">
+                    <div class="form-group form-inline" id="formContainer">
                         
                             <input type="text" name="cityName" id="cityName" class="form-control" autofocus="true" placeholder="Search city">
                             <span class="input-group-btn">
@@ -35,12 +35,13 @@
                             </span>
                         
                     </div>
+                    <ul class="cityContainer list-group" id="cityContainer"></ul>
                                
             </div>
             <!-- column for current weather -->
             <div class="col-md-9 px-md-5">
                 <div class="row border">                    
-                    <div class="col-md-8">
+                    <div class="col-md-7">
                         
                         <div  id="dailyWeather">
 
@@ -49,7 +50,7 @@
                             
                         </div>
                     </div>
-                    <div class="col-md-4 d-flex justify-content-center" id="dailyIcon">
+                    <div class="col-md-5 d-flex justify-content-center" id="dailyIcon">
 
                     </div>
                 </div>

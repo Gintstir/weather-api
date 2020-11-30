@@ -1,34 +1,119 @@
 
 
 const currentTime = moment().format('dddd, MMMM Do YYYY');
-// //var citySearch = cityNameEl.value;
-// const currentTempEl = document.querySelector("#daily-temp");
-// const currentHumEl = document.querySelector("#daily-humidity");
-// const currentWindEl = document.querySelector("#daily-wind");
-// const currentCityDateIconEl = document.querySelector("#city-date-icon");
-// const currentWeatherIcon = document.querySelector("#now-icon");
+//console.log(currentTime);
+const searchedCityList = document.querySelector("#cityContainer");
 
 
-console.log(currentTime);
+
 //const apiKey = "18eafa00225477a564d0471bb75359e9";
 //const apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + citySearch + "&appid=18eafa00225477a564d0471bb75359e9&units=metric";
+loadEventListeners();
 
 
+function loadEventListeners() {
 
+    //Load saved cities section
+    document.addEventListener('DOMContentLoaded', getCities);
+    
+    //get current weather and 5 day forecast
+    document.querySelector("#search-button").addEventListener("click", getCurrentWeather);
+    
+}
 
-//create function to get search value, save value of search field, 
-//getSearchValue function
+//get cities from Local Storage and display 
+function getCities() {
+    let cities;
+    if(localStorage.getItem('cities') === null) {
+        cities = [];
+    } else {
+        cities = JSON.parse(localStorage.getItem('cities'));
+    }
+
+    cities.forEach(function(city){
+        // Create li element
+        const cityList = document.createElement('li');
+        // Add class
+        cityList.className = 'cityContainer-item list-group-item';
+        // Create text node and append to li
+        cityList.appendChild(document.createTextNode(city));
+        // Create new link element
+        const cityLink = document.createElement('a');
+        // Add class
+        cityLink.className = 'delete-item secondary-content';
+        // Add icon html
+        //link.innerHTML = '<i class="fa fa-remove"></i>';
+        // Append the link to li
+        cityList.appendChild(cityLink);
+
+        // Append li to ul
+        searchedCityList.appendChild(cityList);
+    });    
+}
+
 
 
 
 //get value from search bar
 function getCurrentWeather(event) {
     event.preventDefault();    
-    console.log("this is working");
+    //console.log("this is working");
 
     var cityNameEl = document.querySelector("#cityName").value;   
     cityWeather(cityNameEl);
+
+    //set to local storage
+    // localStorage.setItem('city', cityNameEl);
+
+    //store in LS
+    storeCityInLocalStorage(cityNameEl);
 };
+
+
+//store city
+function storeCityInLocalStorage(city) {
+    let cities;
+    if(localStorage.getItem('cities') === null) {
+        cities = [];
+    } else {
+        cities = JSON.parse(localStorage.getItem('cities'));
+    }
+
+    cities.push(city);
+
+    localStorage.setItem('cities', JSON.stringify(cities));
+}
+
+
+
+// document.querySelector("#cityName").addEventListener("submit", function(event) {
+//     //const saveCity
+//     console.warn(123);
+//     event.preventDefault
+// });
+
+
+
+
+
+// const cityName = localStorage.getItem('city');
+// console.warn();
+// function displaySavedCities() {
+
+
+//     if(localStorage.getItem('city')) {
+//         var savedCity = document.createElement("a");
+
+//         savedCity.textContent = cityNameEl.value;
+
+//         var savedCityContainer = document.querySelector("#formContainer").append(savedCity);
+//     }
+// };
+
+
+//store searched cities
+
+
 
 
 //fetch call for current weather
@@ -38,9 +123,11 @@ function cityWeather(city) {
         return response.json();
     })
     .then(function(data) {
-        console.log(data);        
+        //console.log(data);        
         displayTodayWeather(data);
         fiveDayForecast(city);
+        //displaySavedCities();
+        
        //currentUvIndex(city);
     })
     .catch(err => console.log(err));
@@ -103,7 +190,7 @@ function fiveDayForecast(cityNameEl) {
     })
     .then(function(data) {
         let dayPosition = 0;
-        console.log(data);
+        //console.log(data);
         for (let i = 0; i < data.list.length; i++)  {
             //TA Symone Varnado went over this with me( this loops through the api data array
             // for the five day forecast which iterates at 3 hrs intervals for 5 days and only catches every day at 3pm(15:00:00) )
@@ -112,12 +199,12 @@ function fiveDayForecast(cityNameEl) {
                 var day = data.list[i].dt_txt.split("-")[2].split(" ")[0];
                 var month = data.list[i].dt_txt.split("-")[1];
                 var year = data.list[i].dt_txt.split("-")[0];
-                console.log(day, month, year);
+                //console.log(day, month, year);
 
                 //display date in forecast cards
                 var fiveDayDateHeader = document.querySelector("#" + "forecastDate" + dayPosition);
                 fiveDayDateHeader.textContent = ("(" + month + "-" + day + "-" + year + ")");
-                console.log(fiveDayDateHeader);
+                //console.log(fiveDayDateHeader);
 
                 //display temp and humidity in forecast cards
                 //var fiveDayWeather = document.querySelector("#" + "forecastConditions" + dayPosition);
@@ -126,7 +213,7 @@ function fiveDayForecast(cityNameEl) {
                 fiveDayTempP.textContent = ("Temp: " + data.list[i].main.temp);
                 var fiveDayHumP = document.querySelector("#" + "forecastHum" + dayPosition);
                 fiveDayHumP.textContent = ("Humidity: " + data.list[i].main.humidity + "%")
-                console.log(fiveDayTempP);
+                //console.log(fiveDayTempP);
 
                 //display 5 day image
                 var fiveDayImg = document.querySelector("#" + "forecastImg" + dayPosition);
@@ -134,7 +221,7 @@ function fiveDayForecast(cityNameEl) {
 
 
 
-                console.log(data.list[i].weather[0].icon);
+                //console.log(data.list[i].weather[0].icon);
 
                 //move through img, temp, and humidity positions
                 dayPosition++;
@@ -151,7 +238,7 @@ function fiveDayForecast(cityNameEl) {
 
 //fetch and display uv index on current weather
 function currentUvIndex(data) {
-    console.log(data)
+    //console.log(data)
     // var cityLat = data.coord.lat;
     // var cityLong = data.coord.long;
     fetch("https://api.openweathermap.org/data/2.5/uvi?lat=" + data.coord.lat + "&lon=" + data.coord.lon + "&appid=18eafa00225477a564d0471bb75359e9")
@@ -187,34 +274,13 @@ function currentUvIndex(data) {
     //console.log(currentUvIndex(cityLat, cityLong));
 };
 
-document.querySelector("#search-button").addEventListener("click", getCurrentWeather);
 
 
 
 
 
 
-//display current weather
 
-// var getCityWeather = function(citySearch) {
-//     let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${citySearch}&appid=${apiKey}`;
-//     fetch(apiUrl)
-//         .then(function(response) {
-//             console.log(response)
-//         //     if (response.ok){
-//         //         response.json().then(function(data) {
-//         //             console.log(data);
-//         //         });
-//         //     } else {
-//         //         alert("error: " + response.statusText);   
-//         //     }
-//         // })
-//         // .catch(function(error) {
-//         //     msg.textContent = "Please search for a valid city";
-//         });   
-// };
-
-//Api key from openweather: 18eafa00225477a564d0471bb75359e9
 
 
 
