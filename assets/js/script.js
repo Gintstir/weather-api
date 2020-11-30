@@ -82,7 +82,7 @@ function storeCityInLocalStorage(city) {
     }
 
     cities.push(city);
-
+    
     localStorage.setItem('cities', JSON.stringify(cities));
 }
 
@@ -114,6 +114,7 @@ function displayTodayWeather(data) {
     var currentWeatherImage = document.createElement("img");
     //larger img for current weather section
     currentWeatherImage.setAttribute("src", "http://openweathermap.org/img/wn/" + currentWeatherIcon + "@2x.png");
+    currentWeatherImage.className = "my-auto";   
     currentIcon.appendChild(currentWeatherImage);
 
     //City name and date

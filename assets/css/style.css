@@ -14,14 +14,15 @@ body {
 }
 
 /* img {
-    ;
+    height: 100px;
+    width: 100px;
 } */
 .card {
     border: none;
-    background-color: rgb(56, 56, 216);
+    background-color: rgb(1, 120, 255);
     color: whitesmoke;
 }
 
-#dailyIcon {
-    background-color: rgb(56, 56, 216);
-}
+/* #dailyIcon {
+    background-color: rgb(1, 120, 255);
+} */
