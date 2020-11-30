@@ -21,7 +21,7 @@ function loadEventListeners() {
     
 }
 
-//get cities from Local Storage and display- I adapted the method shown by 
+//get cities from Local Storage and display- I adapted the method shown by Brad Traversy in his Udemy JavaScript course
 function getCities() {
     let cities;
     if(localStorage.getItem('cities') === null) {
