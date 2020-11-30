@@ -1,14 +1,15 @@
 
-
+//variable to get current date in displayTodayWeather
 const currentTime = moment().format('dddd, MMMM Do YYYY');
-//console.log(currentTime);
+
+//variable to add searched cities to city container
 const searchedCityList = document.querySelector("#cityContainer");
 
+//variable for unique api key
+const apiKey = "18eafa00225477a564d0471bb75359e9";
 
-
-//const apiKey = "18eafa00225477a564d0471bb75359e9";
 //const apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + citySearch + "&appid=18eafa00225477a564d0471bb75359e9&units=metric";
-loadEventListeners();
+
 
 
 function loadEventListeners() {
@@ -21,9 +22,11 @@ function loadEventListeners() {
     
 }
 
-//get cities from Local Storage and display- I adapted the method shown by Brad Traversy in his Udemy JavaScript course
+//get cities from Local Storage and display- I adapted the method shown by Brad Traversy in his Udemy JavaScript course.
 function getCities() {
+
     let cities;
+
     if(localStorage.getItem('cities') === null) {
         cities = [];
     } else {
@@ -37,35 +40,34 @@ function getCities() {
         cityList.className = 'cityContainer-item list-group-item';
         // Create text node and append to li
         cityList.appendChild(document.createTextNode(city));
-        // Create new link element
-        const cityLink = document.createElement('a');
-        // Add class
-        cityLink.className = 'delete-item secondary-content';
-        // Add icon html
-        //link.innerHTML = '<i class="fa fa-remove"></i>';
-        // Append the link to li
-        cityList.appendChild(cityLink);
-
         // Append li to ul
         searchedCityList.appendChild(cityList);
     });    
 }
 
-
-
-
-//get value from search bar
+//get value from search bar and make list of searched cities
 function getCurrentWeather(event) {
     event.preventDefault();    
     //console.log("this is working");
 
-    var cityNameEl = document.querySelector("#cityName").value;   
-    cityWeather(cityNameEl);
+    var cityNameEl = document.querySelector("#cityName").value; 
+    
+    if (cityNameEl === "") {
+        alert("Please add a city name to see that city's weather");
+        //break;
+    }
+    const cityList = document.createElement('li');
+    // Add class
+    cityList.className = 'cityContainer-item list-group-item';
+    // Create text node and append to li
+    cityList.appendChild(document.createTextNode(cityNameEl));
+    // Append li to ul
+    searchedCityList.appendChild(cityList);
 
-    //set to local storage
-    // localStorage.setItem('city', cityNameEl);
 
-    //store in LS
+    cityWeather(cityNameEl);    
+
+    //store in LocalStorage
     storeCityInLocalStorage(cityNameEl);
 };
 
@@ -84,41 +86,9 @@ function storeCityInLocalStorage(city) {
     localStorage.setItem('cities', JSON.stringify(cities));
 }
 
-
-
-// document.querySelector("#cityName").addEventListener("submit", function(event) {
-//     //const saveCity
-//     console.warn(123);
-//     event.preventDefault
-// });
-
-
-
-
-
-// const cityName = localStorage.getItem('city');
-// console.warn();
-// function displaySavedCities() {
-
-
-//     if(localStorage.getItem('city')) {
-//         var savedCity = document.createElement("a");
-
-//         savedCity.textContent = cityNameEl.value;
-
-//         var savedCityContainer = document.querySelector("#formContainer").append(savedCity);
-//     }
-// };
-
-
-//store searched cities
-
-
-
-
 //fetch call for current weather
 function cityWeather(city) {
-    fetch("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=18eafa00225477a564d0471bb75359e9&units=imperial")
+    fetch("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apiKey + "&units=imperial")
     .then(function(response) {
         return response.json();
     })
@@ -126,9 +96,7 @@ function cityWeather(city) {
         //console.log(data);        
         displayTodayWeather(data);
         fiveDayForecast(city);
-        //displaySavedCities();
         
-       //currentUvIndex(city);
     })
     .catch(err => console.log(err));
 
@@ -141,8 +109,10 @@ function displayTodayWeather(data) {
     //weather icon    
     var currentIcon = document.querySelector("#dailyIcon");
     currentIcon.innerHTML = "";
+    //icon data from api info
     var currentWeatherIcon = data.weather[0].icon;
     var currentWeatherImage = document.createElement("img");
+    //larger img for current weather section
     currentWeatherImage.setAttribute("src", "http://openweathermap.org/img/wn/" + currentWeatherIcon + "@2x.png");
     currentIcon.appendChild(currentWeatherImage);
 
@@ -150,28 +120,24 @@ function displayTodayWeather(data) {
     var currentWeatherCityDate = document.querySelector("#dailyWeather");
     currentWeatherCityDate.innerHTML = "";
     var currentCityDate = document.createElement("h4");
+    //use moment.js here for current date
     currentCityDate.textContent = (data.name + " " + "(" + currentTime + ")");
     currentWeatherCityDate.appendChild(currentCityDate);
     
-    //temp, humidity, wind, and uv index
+    //container for temp, humidity, wind, and uv index
     var currentWeather = document.querySelector("#daily-conditions");
     currentWeather.innerHTML = "";
-    // var currentCityDateIcon = document.createElement("li");
-    // currentCityDateIcon.textContent = (data.name + " " + currentTime); 
-    // console.log(currentCityDateIcon);
+    
+    //create elements and text for temp/humidity/and wind- make seperate function for UV index
     var currentTempLi = document.createElement("p");
     currentTempLi.textContent = ("Temp: " + data.main.temp + "°F");
     var currentHumidityLi = document.createElement("p");
     currentHumidityLi.textContent = ("Humidity: " + data.main.humidity + "%");
     var currentWindLi = document.createElement("p");
     currentWindLi.textContent = ("Wind Speed: " + data.wind.speed + "mph");
-     currentUvIndex(data);
-  
-
-    //var currentWeatherContainer = document.querySelector("#daily-conditions");
-
+    currentUvIndex(data);
     
-    //currentWeather.appendChild(currentCityDateIcon);
+    //append new text and data to currentweather element
     currentWeather.appendChild(currentTempLi);
     currentWeather.appendChild(currentHumidityLi);
     currentWeather.appendChild(currentWindLi);
@@ -183,12 +149,13 @@ function displayTodayWeather(data) {
 //fetch and display the five day forecast
 function fiveDayForecast(cityNameEl) {
 
-    fetch("https://api.openweathermap.org/data/2.5/forecast?q=" + cityNameEl + "&appid=18eafa00225477a564d0471bb75359e9&units=imperial" )
+    fetch("https://api.openweathermap.org/data/2.5/forecast?q=" + cityNameEl + "&appid=" + apiKey + "&units=imperial" )
     .then(function(response) {
         return response.json();
         
     })
     .then(function(data) {
+        // to cycle through 5 day id's
         let dayPosition = 0;
         //console.log(data);
         for (let i = 0; i < data.list.length; i++)  {
@@ -206,9 +173,7 @@ function fiveDayForecast(cityNameEl) {
                 fiveDayDateHeader.textContent = ("(" + month + "-" + day + "-" + year + ")");
                 //console.log(fiveDayDateHeader);
 
-                //display temp and humidity in forecast cards
-                //var fiveDayWeather = document.querySelector("#" + "forecastConditions" + dayPosition);
-                //fiveDayWeather.innerHTML = "";
+                //display temp and humidity in forecast cards                
                 var fiveDayTempP = document.querySelector("#" + "forecastTemp" + dayPosition);
                 fiveDayTempP.textContent = ("Temp: " + data.list[i].main.temp);
                 var fiveDayHumP = document.querySelector("#" + "forecastHum" + dayPosition);
@@ -225,23 +190,16 @@ function fiveDayForecast(cityNameEl) {
 
                 //move through img, temp, and humidity positions
                 dayPosition++;
-
             }
-
-        }
-        // let fiveDay = document.querySelector("#five-day")
+        }        
     })
-    
-           
-
 };
 
 //fetch and display uv index on current weather
 function currentUvIndex(data) {
     //console.log(data)
-    // var cityLat = data.coord.lat;
-    // var cityLong = data.coord.long;
-    fetch("https://api.openweathermap.org/data/2.5/uvi?lat=" + data.coord.lat + "&lon=" + data.coord.lon + "&appid=18eafa00225477a564d0471bb75359e9")
+    //fetch call for UV index
+    fetch("https://api.openweathermap.org/data/2.5/uvi?lat=" + data.coord.lat + "&lon=" + data.coord.lon + "&appid=" + apiKey)
     .then(function(response) {
         return response.json();
         
@@ -273,6 +231,10 @@ function currentUvIndex(data) {
     })
     //console.log(currentUvIndex(cityLat, cityLong));
 };
+
+//function call for event listeners
+loadEventListeners();
+
 
 
 
